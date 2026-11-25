@@ -23,7 +23,6 @@ const apellidos = [
     "Castro", "Herrera", "Morales"
 ];
 
-// Función para seleccionar un elemento aleatorio
 function aleatorio(lista) {
     const posicion = Math.floor(Math.random() * lista.length);
 
@@ -37,13 +36,13 @@ function generarISBN(isbnsExistentes) {
 
     do {
 
-        // Generamos los primeros 12 dígitos
+     
         const base = "978" +
             Math.floor(Math.random() * 1000000000)
                 .toString()
                 .padStart(9, "0");
 
-        // Calculamos el dígito de control ISBN-13
+       
         let suma = 0;
 
         for (let i = 0; i < 12; i++) {
@@ -74,7 +73,6 @@ function generarCatalogo(n) {
 
     const catalogo = [];
 
-    // Set permite almacenar ISBN únicos
     const isbnsExistentes = new Set();
 
     for (let i = 0; i < n; i++) {
