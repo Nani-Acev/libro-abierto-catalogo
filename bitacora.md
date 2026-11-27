@@ -406,3 +406,85 @@ Se comprobó que la búsqueda binaria es más eficiente cuando se trabaja con ca
 La búsqueda lineal tiene complejidad O(n), mientras que la búsqueda binaria tiene complejidad O(log n).
 
 Finalmente, se comprobó que ambas versiones binarias encuentran los mismos resultados y que el ordenamiento del catálogo es indispensable para su correcto funcionamiento.
+
+# Bitácora – Libro Abierto
+
+## MiniReto v0.1: Buscador integrado
+
+### Objetivo
+
+Integrar un buscador que seleccione el algoritmo según el tipo de consulta y que resuelva las búsquedas de ISBN repetidos en un catálogo ordenado.
+
+### Modelo de datos
+
+Cada libro se representa mediante un objeto con estos campos:
+
+| Campo | Tipo | Descripción |
+|---|---|---|
+| isbn | String | Identificador ISBN-13 del libro |
+| titulo | String | Título del libro |
+| autor | String | Autor |
+| anio | Number | Año de publicación |
+| prestamos | Number | Cantidad de préstamos |
+| sede | String | Sede donde está registrada la copia |
+
+El ISBN es una cadena porque identifica el libro y no se utiliza para operaciones aritméticas.
+
+### Generación de copias repetidas
+
+`generarCatalogo(cantidad, { copiasRepetidas })` permite añadir copias del primer registro. Las copias conservan el ISBN y los datos bibliográficos, pero se asignan a sedes diferentes. Al ordenar por ISBN, quedan consecutivas.
+
+Para la demostración se generan 10.000 libros originales y 3 copias adicionales; el catálogo contiene 10.003 registros. El ISBN duplicado aparece en cuatro registros contando el original.
+
+### Tabla de decisión
+
+| Tipo de consulta | ¿Datos ordenados por ese campo? | Algoritmo elegido | Complejidad |
+|---|---|---|---|
+| Título exacto | No | Búsqueda lineal | O(n) |
+| Autor | No | Búsqueda lineal completa | O(n) |
+| Palabra dentro del título | No | Búsqueda lineal por subcadena | O(n) |
+| ISBN, una coincidencia | Sí, por ISBN | Búsqueda binaria iterativa o recursiva | O(log n) |
+| Primera copia de ISBN | Sí, por ISBN | Búsqueda binaria de primera ocurrencia | O(log n) |
+| Todas las copias de ISBN | Sí, por ISBN | Primera ocurrencia + recorrido contiguo | O(log n + k) |
+
+`n` representa la cantidad de registros y `k` la cantidad de copias encontradas.
+
+### Traza de primera ocurrencia
+
+La búsqueda binaria de primera ocurrencia mantiene una variable `primera`, inicialmente `-1`.
+
+1. Calcula el punto medio.
+2. Si el ISBN coincide, guarda el índice y continúa por la mitad izquierda.
+3. Si el ISBN del medio es menor, busca a la derecha.
+4. Si es mayor, busca a la izquierda.
+5. Al terminar devuelve el índice guardado; si no hubo coincidencia, devuelve `-1`.
+
+Después se recorre el arreglo desde esa posición hacia la derecha hasta que el ISBN sea diferente.
+
+### Casos borde probados por diseño
+
+- Catálogo vacío: la búsqueda devuelve posición `-1` y cero copias.
+- ISBN inexistente: devuelve posición `-1`.
+- Una sola copia: devuelve esa posición y cantidad 1.
+- Varias copias consecutivas: devuelve la primera y cuenta el bloque completo.
+- Copias al inicio o al final: el rango de búsqueda respeta los límites del arreglo.
+
+### Reporte y comparaciones
+
+Al ejecutar `node src/catalogo.js` se muestran consultas de ejemplo por título, autor, palabra e ISBN. Cada reporte indica el algoritmo y las comparaciones. Para el ISBN repetido se informan por separado las comparaciones binarias y las del recorrido.
+
+Las consultas por autor y palabra recorren todo el catálogo para garantizar que se devuelvan todas las coincidencias.
+
+### Comparación teórica de búsquedas
+
+| Registros (n) | Lineal, peor caso | Binaria, máximo aproximado |
+|---:|---:|---:|
+| 1.000 | 1.000 | 10 |
+| 10.000 | 10.000 | 14 |
+| 1.000.000 | 1.000.000 | 20 |
+
+El máximo de referencia para la búsqueda binaria se calcula con `ceil(log2(n + 1))`. Las comparaciones observadas en una búsqueda concreta dependen de la posición del dato.
+
+### Conclusión
+
+El buscador integrado selecciona búsqueda lineal cuando los datos no están ordenados por el campo consultado y búsqueda binaria cuando el catálogo está ordenado por ISBN. La variante de primera ocurrencia permite localizar el inicio del bloque de copias repetidas y contarlas recorriendo únicamente los registros contiguos.
