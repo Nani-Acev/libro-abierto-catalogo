@@ -247,3 +247,162 @@ Se implementaron tres funciones de búsqueda lineal y se midió su rendimiento u
 Las pruebas permitieron comprobar que la búsqueda por título puede detenerse anticipadamente, mientras que las búsquedas por autor y palabra necesitan recorrer todo el catálogo para encontrar todas las coincidencias.
 
 También se comprobó que la búsqueda lineal tiene un mejor caso O(1), mientras que su caso promedio y peor caso son O(n).
+
+
+
+## Mini reto 3
+
+# 18. Implementación de búsqueda binaria
+
+En esta actividad se implementó la búsqueda binaria para optimizar las consultas de libros mediante su ISBN.
+
+La búsqueda binaria permite encontrar elementos de manera eficiente cuando el catálogo está ordenado.
+
+## 19. Ordenamiento del catálogo
+
+Se creó la función `ordenarPorIsbn()`, que recibe el catálogo original y devuelve una copia ordenada por ISBN.
+
+Para realizar el ordenamiento se utilizaron:
+
+- El método `sort()`.
+- La función `localeCompare()`.
+
+Se creó una copia del arreglo original para evitar modificar los datos iniciales.
+
+## 20. Búsqueda binaria iterativa
+
+Se implementó la función `buscarPorIsbn()`.
+
+Esta función utiliza un ciclo `while` para buscar un ISBN dentro del catálogo ordenado.
+
+En cada iteración calcula el punto medio utilizando:
+
+medio = Math.floor((inicio + fin) / 2)
+
+Después compara el ISBN buscado con el ISBN ubicado en el punto medio.
+
+Si coincide, devuelve el libro.
+
+Si el ISBN buscado es mayor, continúa por la mitad derecha.
+
+Si es menor, continúa por la mitad izquierda.
+
+También registra el número de comparaciones realizadas.
+
+## 21. Búsqueda binaria recursiva
+
+Se implementó la función `buscarPorIsbnRecursivo()`.
+
+Esta función utiliza recursividad, es decir, se llama a sí misma para continuar la búsqueda en la mitad correspondiente del catálogo.
+
+Su caso base ocurre cuando inicio es mayor que fin. En ese momento significa que el ISBN no existe y devuelve null.
+
+Las dos versiones utilizan el mismo procedimiento de búsqueda y deben encontrar el mismo libro.
+
+## 22. Traza de búsqueda de un ISBN existente
+
+Se ordenó la muestra de ocho libros por ISBN y se buscó:
+
+9789587047462
+
+Este ISBN corresponde al libro Delirio, de Laura Restrepo.
+
+| Paso | Inicio | Fin | Medio | Resultado |
+|---|---:|---:|---:|---|
+| 1 | 0 | 7 | 3 | ISBN buscado mayor |
+| 2 | 4 | 7 | 5 | ISBN buscado menor |
+| 3 | 4 | 4 | 4 | Libro encontrado |
+
+Resultado:
+
+- Libro: Delirio.
+- Autor: Laura Restrepo.
+- Año: 2004.
+- Comparaciones: 3.
+
+## 23. Traza de búsqueda de un ISBN inexistente
+
+Se buscó el siguiente ISBN:
+
+9789999999999
+
+Este código no existe en la muestra.
+
+| Paso | Inicio | Fin | Medio | Resultado |
+|---|---:|---:|---:|---|
+| 1 | 0 | 7 | 3 | ISBN buscado mayor |
+| 2 | 4 | 7 | 5 | ISBN buscado mayor |
+| 3 | 6 | 7 | 6 | ISBN buscado mayor |
+| 4 | 7 | 7 | 7 | ISBN buscado mayor |
+
+Después de la cuarta comparación:
+
+- Inicio: 8.
+- Fin: 7.
+- Resultado: null.
+
+Esto demuestra que la búsqueda termina cuando ya no quedan posiciones por revisar.
+
+## 24. Comparación entre búsqueda lineal y binaria
+
+Se realizaron pruebas con catálogos de:
+
+- 1.000 libros.
+- 10.000 libros.
+- 1.000.000 de libros.
+
+Se compararon tres algoritmos:
+
+- Búsqueda lineal por ISBN.
+- Búsqueda binaria iterativa.
+- Búsqueda binaria recursiva.
+
+La búsqueda lineal puede necesitar recorrer una gran cantidad de registros.
+
+En cambio, la búsqueda binaria reduce el espacio de búsqueda a la mitad en cada comparación.
+
+### Máximo teórico de comparaciones
+
+Para calcular el máximo teórico se utilizó:
+
+Math.ceil(Math.log2(n + 1))
+
+| Cantidad de libros | Máximo de comparaciones binarias |
+|---:|---:|
+| 1.000 | 10 |
+| 10.000 | 14 |
+| 1.000.000 | 20 |
+
+Los resultados demuestran que la búsqueda binaria puede encontrar un libro entre un millón de registros utilizando como máximo 20 comparaciones.
+
+## 25. Prueba con catálogo desordenado
+
+Se realizó una prueba utilizando la muestra original sin ordenar.
+
+Se intentó buscar el ISBN:
+
+9789588886121
+
+Este código corresponde a La vorágine.
+
+La búsqueda binaria devolvió null, aunque el libro sí estaba en el catálogo.
+
+Esto ocurrió porque el catálogo original no estaba ordenado por ISBN.
+
+La búsqueda binaria supone que los elementos están organizados y utiliza esa organización para descartar la mitad de los registros.
+
+Cuando los datos están desordenados, puede descartar incorrectamente la parte donde se encuentra el libro.
+
+Por esta razón, primero debemos ordenar el catálogo y después realizar la búsqueda binaria.
+
+## 26. Conclusión
+
+Se implementaron las versiones iterativa y recursiva de la búsqueda binaria.
+
+También se comparó su rendimiento con la búsqueda lineal.
+
+Se comprobó que la búsqueda binaria es más eficiente cuando se trabaja con catálogos grandes y ordenados.
+
+La búsqueda lineal tiene complejidad O(n), mientras que la búsqueda binaria tiene complejidad O(log n).
+
+Finalmente, se comprobó que ambas versiones binarias encuentran los mismos resultados y que el ordenamiento del catálogo es indispensable para su correcto funcionamiento.

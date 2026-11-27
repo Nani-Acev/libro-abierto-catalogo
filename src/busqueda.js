@@ -3,7 +3,6 @@ function normalizar(texto) {
 }
 
 
-
 function buscarPorTitulo(libros, titulo) {
 
     let comparaciones = 0;
@@ -88,10 +87,34 @@ function buscarPorPalabra(libros, palabra) {
     };
 }
 
+// BÚSQUEDA LINEAL POR ISBN
 
+function buscarPorIsbnLineal(libros, isbn) {
+
+    let comparaciones = 0;
+
+    for (let i = 0; i < libros.length; i++) {
+
+        comparaciones++;
+
+        if (libros[i].isbn === isbn) {
+
+            return {
+                libro: libros[i],
+                comparaciones: comparaciones
+            };
+        }
+    }
+
+    return {
+        libro: null,
+        comparaciones: comparaciones
+    };
+}
 
 module.exports = {
     buscarPorTitulo,
     buscarPorAutor,
-    buscarPorPalabra
+    buscarPorPalabra,
+    buscarPorIsbnLineal
 };
